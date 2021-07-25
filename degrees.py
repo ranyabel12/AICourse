@@ -84,6 +84,33 @@ def main():
             print(f"{i + 1}: {person1} and {person2} starred in {movie}")
 
 
+class Node():
+    def __init__(self, people, movie, parent):
+        self.people = people 
+        self.movie = movie
+        self.parent = parent
+        
+class QueueFrontier():
+    def __init__(self):
+        self.frontier = []
+
+    def add(self,node):
+        self.frontier.append(node)
+
+    def contains_people(self,people):
+        return any(node.people == people for node in self.frontier)        
+        
+    def empty(self):
+        return len(self.frontier) == 0
+
+    def remove():
+        if self.empty():
+            raise Exception("empty frontier")
+        else:
+            node = self.frontier[0]
+            frontier = frontier[1:]
+            return node  
+        
 def shortest_path(source, target):
     """
     Returns the shortest list of (movie_id, person_id) pairs
@@ -91,11 +118,48 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    
+    # Keep track of number of states explored
+    num_explored = 0
+    
+    #initialize frontier to source of path 
+    
+    frontier = QueueFrontier()
+    frontier.add(neigbors_for_person(source))
+    
 
-    # TODO
-    raise NotImplementedError
-
-
+    #initialize empty explored set 
+    explored = set()
+        
+    while True:
+        
+        if frontier.empty():
+            raise Exception("no solution")
+           
+        # Choose a node from the frontier
+        node = frontier.remove()
+        num_explored += 1
+        
+        #if node is the target then solution is found 
+        if node[1] == target:
+            pairs = []
+            while node.parent is not source: 
+                path.append(node)
+                node = node.parent
+            path.reverse()
+            return path
+             
+        explored.add(node)
+ 
+    #Add neighbors to frontier
+        for people, movie in self.neighbors_for_person(node.people):
+            if not frontier.contains_people(people) and people not in self.explored:
+                child = Node(people=people, parent=node, movie=movie)
+                frontier.add(child)
+    #If values are empty
+    if source == None: 
+        raise NotImplementError            
+            
 def person_id_for_name(name):
     """
     Returns the IMDB id for a person's name,
